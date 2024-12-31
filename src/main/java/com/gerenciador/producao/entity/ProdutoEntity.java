@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -19,15 +21,20 @@ public class ProdutoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
+    @Size(min = 0)
     private String nome;
 
     @NonNull
-    private Long preco;
+    @Min(0)
+    private Long valorSemDesconto;
+
     @NonNull
     private TipoProdutoEnum tipoProduto;
 
     @NonNull
     private Long pesoKg;
+
     @NonNull
     private Long pesoMB;
 
@@ -37,5 +44,5 @@ public class ProdutoEntity {
     private Boolean promocao;
 
     private Long valorComDesconto;
-    private Long valorComFrete;
+    private Long valorTotalComFrete;
 }

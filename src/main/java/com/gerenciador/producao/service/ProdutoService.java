@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProdutoService {
@@ -18,7 +19,6 @@ public class ProdutoService {
     private ProdutoRepository repository;
 
     public ProdutoEntity save(ProdutoEntity entity) {
-
         return repository.save(entity);
     }
 
@@ -29,48 +29,48 @@ public class ProdutoService {
         List<ProdutoEntity> produtoList = produtosBd.stream().peek(item -> {
             // promocao
             if (item.getPromocao()) {
-                Long desconto = DESCONTO * item.getPreco() / 100;
-                item.setValorComDesconto(item.getPreco() - desconto);
+                Long desconto = DESCONTO * item.getValorSemDesconto() / 100;
+                item.setValorComDesconto(item.getValorSemDesconto() - desconto);
             }
             // elegivel a frete
             if (TipoProdutoEnum.FISICO.name().equals(item.getTipoProduto().name())) {
                 item.setValorFrete(item.getPesoKg() * PESO_KG);
             }
+            // calculo valor total em promocao
+            if (TipoProdutoEnum.FISICO.name().equals(item.getTipoProduto().name()) &&
+                    item.getPromocao()) {
+                item.setValorTotalComFrete(item.getValorFrete() + item.getValorComDesconto());
+            }
+
         }).toList();
 
         return produtoList;
     }
 
-    public List<ProdutoEntity> list1() {
+    public ProdutoEntity put(ProdutoEntity produto) {
 
-        final List<ProdutoEntity> produtosBd = repository.findAll();
+        ProdutoEntity byId = new ProdutoEntity();
 
-        return produtosBd;
-    }
-
-    public ProdutoEntity findById(ProdutoEntity entity) {
-        return repository.findById(entity.getId()).get();
-    }
-
-    public ProdutoEntity put() {
-        var entity = new ProdutoEntity();
-        if (!repository.existsById(entity.getId())) {
-
+        if (!Objects.isNull(produto.getId())) {
+            byId = repository.findById(produto.getId()).get();
         }
-        ProdutoEntity byId = repository.findById(entity.getId()).get();
 
-        byId.setNome(entity.getNome());
-        byId.setPreco(entity.getPreco());
-        byId.setTipoProduto(entity.getTipoProduto());
-        byId.setPesoKg(entity.getPesoKg());
-        byId.setPesoMB(entity.getPesoMB());
-        byId.setValorFrete(entity.getValorFrete());
-        byId.setPromocao(entity.getPromocao());
-        byId.setValorComDesconto(entity.getValorComDesconto());
-        byId.setValorComFrete(entity.getValorComFrete());
+        byId.setNome(produto.getNome());
+        byId.setValorSemDesconto(produto.getValorSemDesconto());
+        byId.setTipoProduto(produto.getTipoProduto());
+        byId.setPesoKg(produto.getPesoKg());
+        byId.setPesoMB(produto.getPesoMB());
+        byId.setValorFrete(produto.getValorFrete());
+        byId.setPromocao(produto.getPromocao());
+        byId.setValorComDesconto(produto.getValorComDesconto());
+        byId.setValorTotalComFrete(produto.getValorTotalComFrete());
 
         repository.save(byId);
 
         return byId;
+    }
+
+    public void delete(ProdutoEntity produto) {
+        repository.deleteById(produto.getId());
     }
 }

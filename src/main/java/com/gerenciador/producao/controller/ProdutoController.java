@@ -2,6 +2,7 @@ package com.gerenciador.producao.controller;
 
 import com.gerenciador.producao.entity.ProdutoEntity;
 import com.gerenciador.producao.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,15 +26,14 @@ public class ProdutoController {
         return service.list();
     }
 
-    @GetMapping("/1")
-    public List<ProdutoEntity> list1 () {
-        return service.list();
+    @PutMapping()
+    public ProdutoEntity put (@RequestBody @Valid ProdutoEntity produto) {
+        return service.put(produto);
     }
 
-    @GetMapping("/id")
-    public ProdutoEntity findById (@RequestBody ProdutoEntity produto) {
-        return service.findById(produto);
+    @DeleteMapping()
+    public void delete (@RequestBody ProdutoEntity produto) {
+        service.delete(produto);
     }
-
 
 }
