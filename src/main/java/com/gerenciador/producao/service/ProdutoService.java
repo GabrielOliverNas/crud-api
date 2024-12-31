@@ -59,7 +59,7 @@ public class ProdutoService {
         byId.setValorSemDesconto(produto.getValorSemDesconto());
         byId.setTipoProduto(produto.getTipoProduto());
         byId.setPesoKg(produto.getPesoKg());
-        byId.setPesoMB(produto.getPesoMB());
+        byId.setPesoMb(produto.getPesoMb());
         byId.setValorFrete(produto.getValorFrete());
         byId.setPromocao(produto.getPromocao());
         byId.setValorComDesconto(produto.getValorComDesconto());

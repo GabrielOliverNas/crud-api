@@ -36,7 +36,7 @@ public class ProdutoEntity {
     private Long pesoKg;
 
     @NonNull
-    private Long pesoMB;
+    private Long pesoMb;
 
     private Long valorFrete;
 
