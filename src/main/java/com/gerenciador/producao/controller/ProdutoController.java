@@ -1,5 +1,6 @@
 package com.gerenciador.producao.controller;
 
+import com.gerenciador.producao.dto.AvaregePriceDto;
 import com.gerenciador.producao.entity.ProdutoEntity;
 import com.gerenciador.producao.service.ProdutoService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class ProdutoController {
 
     @PutMapping()
     public ProdutoEntity put (@RequestBody @Valid ProdutoEntity produto) {
-        return service.put(produto);
+        return service.save(produto);
     }
 
     @DeleteMapping()
@@ -36,4 +37,13 @@ public class ProdutoController {
         service.delete(produto);
     }
 
+    @GetMapping("/by-price")
+    public ProdutoEntity byPrice () {
+        return service.byPrice();
+    }
+
+    @GetMapping("/avarege")
+    public AvaregePriceDto avaregePrice () {
+        return service.avaregePrice();
+    }
 }

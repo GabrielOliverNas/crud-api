@@ -1,6 +1,5 @@
 package com.gerenciador.producao.entity;
 
-import com.gerenciador.producao.enums.TipoProdutoEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +9,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 
 @Entity
@@ -27,22 +28,22 @@ public class ProdutoEntity {
 
     @NonNull
     @Min(0)
-    private Long valorSemDesconto;
+    private BigDecimal valorSemDesconto;
 
     @NonNull
-    private TipoProdutoEnum tipoProduto;
+    private String tipoProduto;
 
     @NonNull
-    private Long pesoKg;
+    private BigDecimal pesoKg;
 
     @NonNull
-    private Long pesoMb;
+    private BigDecimal tamanhoMb;
 
-    private Long valorFrete;
+    private BigDecimal valorFrete;
 
     @NonNull
     private Boolean promocao;
 
-    private Long valorComDesconto;
-    private Long valorTotalComFrete;
+    private BigDecimal valorComDesconto;
+    private BigDecimal valorTotalComFrete;
 }
