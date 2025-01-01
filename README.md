@@ -11,6 +11,11 @@ Será necessário um ambiente de desenvolvimento com maven 4.0 e java 1.17 (Java
 - Clone o projeto do GIT
 - Realize um clean install do maven e builde o projeto
 
+## Para testar a aplicação ##
+Extraia a collection produto.postman_collection.json e importe no postman para realizar os testes
+- Ao lado do workspace no canto superior direito clique em import
+- Arraste ou selecione o arquivo 
+
 ## Falando um pouco sobre a apicação ##
 Essa solução em frente ao problema apresentado foi desenvolvida pensando em reutilização de codigo, metodos eficazes e sem duplicidade de codigo.
 Utilizei JPA como interface de dados e H2 como banco de dados.
