@@ -1,12 +1,12 @@
 # Crud api #
 Requisitos obrigatórios para rodar a aplicação
-- java 17 (Pois existem recursos, lambdas que não existem em versões passadas)
+- java 1.11 ou superior (Pois existem recursos, lambdas que não são suportada em versões passadas)
 
 ## Especificações da aplicação ##
 - Banco em memória h2
 
 ## Para rodar a aplicação ##
-Será necessário um ambiente de desenvolvimento com maven 4.0 e java 1.17 (Java em versões passadas não são suportados). Após o java e o maven na versão correta
+Será necessário um ambiente de desenvolvimento com maven 4.0 e java 1.11 e 1.17 (Java em versões passadas não são suportados). Após o java e o maven na versão correta
 - Escolha o local do projeto
 - Clone o projeto do GIT
 - Realize um clean install do maven e builde o projeto
