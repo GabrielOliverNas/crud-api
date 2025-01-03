@@ -23,15 +23,23 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
 
-   /* public ProdutoEntity save(ProdutoEntity entity) {
+    public ProdutoEntity save(ProdutoEntity entity) {
         return repository.save(entity);
-    }*/
-
-    public List<ProdutoEntity> list() {
-        return calculateDiscount(repository.findAll());
     }
 
-    public ProdutoEntity save(ProdutoEntity produto) {
+    public List<ProdutoEntity> list() {
+        return repository.findAll()
+                .stream()
+                .map(this::calculateDiscount)
+                .toList();
+    }
+
+    // codigo foi pensado assim pois valores como
+    // frete, promocao entre outros sao valores mutaveis
+    // e necessitam refazer os calculos
+    public ProdutoEntity alterar(ProdutoEntity produto) {
+
+        ProdutoEntity produtoEntity = new ProdutoEntity();
 
         if (!Objects.isNull(produto.getId())) {
 
@@ -42,26 +50,22 @@ public class ProdutoService {
             byId.setTipoProduto(produto.getTipoProduto());
             byId.setPesoKg(produto.getPesoKg());
             byId.setTamanhoMb(produto.getTamanhoMb());
-            byId.setValorFrete(produto.getValorFrete());
             byId.setPromocao(produto.getPromocao());
-            byId.setValorComDesconto(produto.getValorComDesconto());
-            byId.setValorTotalComFrete(produto.getValorTotalComFrete());
 
             repository.save(byId);
-        } else {
-            repository.save(produto);
+
+            produtoEntity = calculateDiscount(byId);
         }
 
-        return produto;
+        return produtoEntity;
     }
 
     public void delete(ProdutoEntity produto) {
         repository.deleteById(produto.getId());
     }
 
-    // Pensei na solucao assim afim de reduzir codigos duplicados
     public ProdutoEntity byPrice() {
-        return calculateDiscount(List.of(repository.byPrice())).get(0);
+        return calculateDiscount(repository.byPrice());
     }
 
     public AvaregePriceDto avaregePrice() {
@@ -74,25 +78,30 @@ public class ProdutoService {
         return avaregePriceDto;
     }
 
-    private List<ProdutoEntity> calculateDiscount(List<ProdutoEntity> produtosBd) {
-        return produtosBd.stream().peek(item -> {
-            // promocao
-            if (item.getPromocao()) {
+    // codigo de calculos centralizados para reduzir duplicidade
+    private ProdutoEntity calculateDiscount(ProdutoEntity produtosBd) {
 
-                BigDecimal desconto = DESCONTO.multiply(item.getValorSemDesconto())
-                        .divide(valueOf(100));
+        // produto promocional
+        if (produtosBd.getPromocao()) {
+            BigDecimal desconto = DESCONTO.multiply(produtosBd.getValorSemDesconto())
+                    .divide(valueOf(100));
+            produtosBd.setValorComDesconto(
+                    produtosBd.getValorSemDesconto().subtract(desconto));
+        }
+        // elegivel a frete
+        if (TipoProdutoEnum.FISICO.name().equals(produtosBd.getTipoProduto())) {
+            produtosBd.setValorFrete(produtosBd.getPesoKg().multiply(PESO_KG));
 
-                item.setValorComDesconto(item.getValorSemDesconto().subtract(desconto));
+            if (!produtosBd.getPromocao()) {
+                produtosBd.setValorTotalComFrete(
+                        produtosBd.getValorFrete().add(produtosBd.getValorSemDesconto()));
+            } else {
+                produtosBd.setValorTotalComFrete(
+                        produtosBd.getValorFrete().add(produtosBd.getValorComDesconto()));
             }
-            // elegivel a frete
-            if (TipoProdutoEnum.FISICO.name().equals(item.getTipoProduto())) {
-                item.setValorFrete(item.getPesoKg().multiply(PESO_KG));
-            }
-            // calculo valor total em promocao
-            if (TipoProdutoEnum.FISICO.name().equals(item.getTipoProduto()) &&
-                    item.getPromocao()) {
-                item.setValorTotalComFrete(item.getValorFrete().add(item.getValorComDesconto()));
-            }
-        }).toList();
+
+        }
+
+        return produtosBd;
     }
 }

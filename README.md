@@ -1,6 +1,6 @@
 # Crud api #
 Requisitos obrigatórios para rodar a aplicação
-- java 17 (Pois existem recursos, lambdas que não existem em versões passadas)
+- java 1.11 ou 1.17 (Pois existem recursos, lambdas que não existem em versões passadas)
 
 ## Especificações da aplicação ##
 - Banco em memória h2

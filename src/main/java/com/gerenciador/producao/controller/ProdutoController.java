@@ -28,8 +28,8 @@ public class ProdutoController {
     }
 
     @PutMapping()
-    public ProdutoEntity put (@RequestBody @Valid ProdutoEntity produto) {
-        return service.save(produto);
+    public ProdutoEntity alterar (@RequestBody ProdutoEntity produto) {
+        return service.alterar(produto);
     }
 
     @DeleteMapping()
